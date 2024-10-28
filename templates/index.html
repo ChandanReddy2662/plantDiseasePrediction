@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Plant Disease Prediction</h1>
+        
+        {% if prediction %}
+            <h2>Prediction: {{ prediction }}</h2>
+            <h3>Probability: {{ probability * 100 }}%</h3>
+        {% endif %}
+        
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" id="imageUpload" capture="camera" required>
+            <button type="submit" id="submit">Predict Disease</button>
+        </form>
+        <div>
+            <img 
+                id="imagePreview" 
+                src="data:image/jpeg;base64,{{ image_data }}" 
+                alt="Image Preview"
+                style="display: {{ 'block' if image_data else 'none' }};"
+            />
+        </div>
+    </div>
+    <script>
+        document.getElementById('imageUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block'; // Show the image preview
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
